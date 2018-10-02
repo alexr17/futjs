@@ -1,7 +1,12 @@
 const fetch = require('node-fetch')
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes']
-const fetch_page = async url => {
+
+/**
+ * A simple async function to get json from a url
+ * @param {String} url 
+ */
+const fetch_json = async url => {
     try {
         const response = await fetch(url);
         const json = await response.json();
@@ -11,8 +16,13 @@ const fetch_page = async url => {
     }
 };
 
+/**
+ * This async function takes the first player in the database and
+ * generates an object based on those parameters
+ * @return {Object} the attributes
+ */
 const load_attributes = async => {
-    return fetch_page(url + '1').then(json => {
+    return fetch_json(url + '1').then(json => {
         const object = json.items[0]
         //console.log(object)
         let attributes = {}
@@ -26,6 +36,11 @@ const load_attributes = async => {
     
 }
 
+/**
+ * Determines if an attribute is valid (we want to keep it in the database)
+ * @param {String} key 
+ * @param {String} value 
+ */
 const validate_attribute = (key, value) => {
     if (typeof(value) == 'object') {
         if (Array.isArray(value)) return false;
