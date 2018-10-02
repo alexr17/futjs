@@ -1,0 +1,19 @@
+{
+  "name": "fut",
+  "version": "1.0.0",
+  "description": "fifa ultimate team analysis framework",
+  "main": "fut.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "futjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "knex": "^0.15.2",
+    "node-fetch": "^2.2.0"
+  }
+}
