@@ -1,16 +1,23 @@
 const fetch = require('node-fetch')
+const fs = require('fs')
+let attributes = require('./attributes.json')
+
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
-const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes']
+const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes', 'id']
 
 /**
  * A simple async function to get json from a url
  * @param {String} url 
  */
-const fetch_json = async url => {
+const http_fetch = async (url, type = 'html') => {
     try {
         const response = await fetch(url);
-        const json = await response.json();
-        return json;
+        if (type == 'html')
+            return response.text();
+        else if (type == 'json')
+            return response.json();
+        else
+            throw "Invalid type specified"
     } catch (error) {
         console.log(error);
     }
@@ -18,22 +25,24 @@ const fetch_json = async url => {
 
 /**
  * This async function takes the first player in the database and
- * generates an object based on those parameters
- * @return {Object} the attributes
+ * generates an object based on those parameters, writing that object
+ * to a file.
  */
-const load_attributes = async => {
-    return fetch_json(url + '1').then(json => {
+const write_attributes = async () => {
+    if (Object.keys(attributes).length > 0) return false;
+    try {
+        const json = await http_fetch(url + '1', 'json')
         const object = json.items[0]
-        //console.log(object)
-        let attributes = {}
         for (let key in object) {
             attributes[key] = validate_attribute(key, object[key]);
         }
-        return attributes
-    }).catch(error => {
+        fs.writeFileSync("attributes.json", JSON.stringify(attributes, null, 2));
+        return true;
+    } catch(error) {
         console.log(error)
-    })
-    
+        return false;
+    }
+
 }
 
 /**
@@ -42,7 +51,7 @@ const load_attributes = async => {
  * @param {String} value 
  */
 const validate_attribute = (key, value) => {
-    if (typeof(value) == 'object') {
+    if (typeof (value) == 'object') {
         if (Array.isArray(value)) return false;
         let object = {};
         if (key == "league") {
@@ -53,13 +62,23 @@ const validate_attribute = (key, value) => {
         }
         if (!Object.values(object).includes(true)) return false;
         return object;
-    } else if (typeof(value) == 'number' || special_attributes.includes(key)) {
+    } else if (typeof (value) == 'number' || special_attributes.includes(key)) {
         return true;
     } else {
         return false;
     }
 }
 
-load_attributes().then(data => {
-    console.log(data)
-})
+write_attributes();
+
+const parse_fut_data = async => {
+
+}
+
+const parse_page = async => {
+
+}
+
+const parse_player = async => {
+
+}
