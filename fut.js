@@ -1,27 +1,9 @@
-const fetch = require('node-fetch')
 const fs = require('fs')
+const util = require('./util.js')
 let attributes = require('./attributes.json')
 
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes', 'id']
-
-/**
- * A simple async function to get json from a url
- * @param {String} url 
- */
-const http_fetch = async (url, type = 'html') => {
-    try {
-        const response = await fetch(url);
-        if (type == 'html')
-            return response.text();
-        else if (type == 'json')
-            return response.json();
-        else
-            throw "Invalid type specified"
-    } catch (error) {
-        console.log(error);
-    }
-};
 
 /**
  * This async function takes the first player in the database and
@@ -31,7 +13,7 @@ const http_fetch = async (url, type = 'html') => {
 const write_attributes = async () => {
     if (Object.keys(attributes).length > 0) return false;
     try {
-        const json = await http_fetch(url + '1', 'json')
+        const json = await util.http_fetch(url + '1', 'json')
         const object = json.items[0]
         for (let key in object) {
             attributes[key] = validate_attribute(key, object[key]);
