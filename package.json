@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^6.1.0",
     "knex": "^0.15.2",
     "mysql": "^2.16.0",
     "node-fetch": "^2.2.0"
