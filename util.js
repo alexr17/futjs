@@ -4,19 +4,15 @@ const fetch = require('node-fetch')
  * @param {String} url 
  */
 const http_fetch = async (url, type = 'html') => {
-    try {
-        const response = await fetch(url);
-        if (type == 'html')
-            return response.text();
-        else if (type == 'json')
-            return response.json();
-        else
-            throw "Invalid type specified"
-    } catch (error) {
-        console.log(error);
-    }
-};
+    const response = await fetch(url).catch((err) => console.log(err));
 
+    if (type == 'html')
+        return response.text();
+    else if (type == 'json')
+        return response.json();
+    throw "Error in http_fetch: Invalid type specified"
+
+};
 module.exports = {
     http_fetch
 }
