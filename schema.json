@@ -1,6 +1,19 @@
 {
-    "player_count" : 0,
-    "results_per_page" : 0,
-    "page_count" : 0,
-    "unsuccessful": []
+    "api_information": {
+        "player_count" : 0,
+        "results_per_page" : 0,
+        "page_count" : 0,
+        "unsuccessful": []
+    },
+    "tables": {
+        "players" : {
+            "name" : "players"
+        }
+    },
+    "relationships": {
+        "belongs_to": {
+            "player" : ["club", "nation", "league", "card_type", "player_data"],
+            "club" : ["league"]
+        }
+    }
 }

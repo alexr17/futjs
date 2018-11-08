@@ -1,6 +1,8 @@
 const fs = require('fs')
 const util = require('./util.js')
+const knex = require('./knex/knex.js')
 let attributes = require('./attributes.json')
+let schema = require('./schema.json')
 
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes', 'id']
@@ -51,8 +53,64 @@ const validate_attribute = (key, value) => {
     }
 }
 
-write_attributes();
-
+/**
+ * Generates the schema for the database in the schema object, which can then be manipulated or written to a file
+ */
+const generate_db_schema = async () => {
+    //TODO: rewrite this cleaner
+    return knex.table('players').columnInfo().then(columns => {
+        for (let key in columns) {
+            //TODO: define global variables somewhere instead of here
+            if (key.includes('id') || ['created_at', 'updated_at'].includes(key) && !['fut_id', 'base_fut_id'])
+                continue;
+            let col = columns[key]
+            schema.tables.players[key] = {
+                type: col.type
+            }
+        }
+        let tables = ['player_stats', 'player_info', 'nations', 'leagues', 'clubs', 'card_types']
+        return Promise.all(tables.map(table => {
+            return knex.table(table).columnInfo().then(columns => {
+                for (let key in columns) {
+                    if (key.includes('id') || ['created_at', 'updated_at'].includes(key))
+                        continue;
+                    let col = columns[key]
+                    schema.tables[table] = schema.tables[table] || {};
+                    schema.tables[table][key] = {
+                        type: col.type
+                    }
+                }
+            }).catch((err) => {
+                console.log(err)
+            })
+        }))
+    }).catch((err) => {
+        console.log(err)
+    }).finally(() => { 
+        knex.destroy();
+    })
+}
+generate_db_schema().then(()=> {
+    console.log(schema)
+}).catch((err) => {
+    console.log(err)
+})
+//write_attributes_to_file();
+const table_schema = async (table) => {
+    return await knex.table(table).columnInfo().then(columns => {
+        for (let key in columns) {
+            if (key.includes('id') || ['created_at', 'updated_at'].includes(key))
+                continue;
+            let col = columns[key]
+            schema.tables[table] = schema.tables[table] || {};
+            schema.tables[table][key] = {
+                type: col.type
+            }
+        }
+    }).catch((err) => {
+        console.log(err)
+    })
+}
 const parse_fut_data = async => {
 
 }
