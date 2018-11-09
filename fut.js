@@ -61,7 +61,7 @@ const generate_db_schema = async () => {
     return knex.table('players').columnInfo().then(columns => {
         for (let key in columns) {
             //TODO: define global variables somewhere instead of here
-            if (key.includes('id') || ['created_at', 'updated_at'].includes(key) && !['fut_id', 'base_fut_id'])
+            if ((key.includes('id') || ['created_at', 'updated_at'].includes(key)) && !['fut_id', 'base_fut_id'].includes(key))
                 continue;
             let col = columns[key]
             schema.tables.players[key] = {
@@ -90,27 +90,13 @@ const generate_db_schema = async () => {
         knex.destroy();
     })
 }
-generate_db_schema().then(()=> {
-    console.log(schema)
-}).catch((err) => {
-    console.log(err)
-})
-//write_attributes_to_file();
-const table_schema = async (table) => {
-    return await knex.table(table).columnInfo().then(columns => {
-        for (let key in columns) {
-            if (key.includes('id') || ['created_at', 'updated_at'].includes(key))
-                continue;
-            let col = columns[key]
-            schema.tables[table] = schema.tables[table] || {};
-            schema.tables[table][key] = {
-                type: col.type
-            }
-        }
-    }).catch((err) => {
-        console.log(err)
-    })
-}
+
+// generate_db_schema().then(()=> {
+//     fs.writeFileSync('schema.json', JSON.stringify(schema, null, 2))
+// }).catch((err) => {
+//     console.log(err)
+// })
+
 const parse_fut_data = async => {
 
 }

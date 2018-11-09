@@ -1,19 +1,188 @@
 {
-    "api_information": {
-        "player_count" : 0,
-        "results_per_page" : 0,
-        "page_count" : 0,
-        "unsuccessful": []
+  "api_information": {
+    "player_count": 0,
+    "results_per_page": 0,
+    "page_count": 0,
+    "unsuccessful": []
+  },
+  "tables": {
+    "players": {
+      "name": {
+        "type": "varchar"
+      },
+      "rating": {
+        "type": "int"
+      },
+      "position": {
+        "type": "varchar"
+      },
+      "fut_id": {
+        "type": "int"
+      },
+      "base_fut_id": {
+        "type": "int"
+      }
     },
-    "tables": {
-        "players" : {
-            "name" : "players"
-        }
+    "player_stats": {
+      "composure": {
+        "type": "int"
+      },
+      "acceleration": {
+        "type": "int"
+      },
+      "aggression": {
+        "type": "int"
+      },
+      "agility": {
+        "type": "int"
+      },
+      "balance": {
+        "type": "int"
+      },
+      "ballcontrol": {
+        "type": "int"
+      },
+      "crossing": {
+        "type": "int"
+      },
+      "curve": {
+        "type": "int"
+      },
+      "dribbling": {
+        "type": "int"
+      },
+      "finishing": {
+        "type": "int"
+      },
+      "freekickaccuracy": {
+        "type": "int"
+      },
+      "gkdiving": {
+        "type": "int"
+      },
+      "gkhandling": {
+        "type": "int"
+      },
+      "gkkicking": {
+        "type": "int"
+      },
+      "gkpositioning": {
+        "type": "int"
+      },
+      "gkreflexes": {
+        "type": "int"
+      },
+      "headingaccuracy": {
+        "type": "int"
+      },
+      "interceptions": {
+        "type": "int"
+      },
+      "jumping": {
+        "type": "int"
+      },
+      "longpassing": {
+        "type": "int"
+      },
+      "longshots": {
+        "type": "int"
+      },
+      "marking": {
+        "type": "int"
+      },
+      "penalties": {
+        "type": "int"
+      },
+      "positioning": {
+        "type": "int"
+      },
+      "reactions": {
+        "type": "int"
+      },
+      "shortpassing": {
+        "type": "int"
+      },
+      "shotpower": {
+        "type": "int"
+      },
+      "sprintspeed": {
+        "type": "int"
+      },
+      "standingtackle": {
+        "type": "int"
+      },
+      "stamina": {
+        "type": "int"
+      },
+      "strength": {
+        "type": "int"
+      },
+      "vision": {
+        "type": "int"
+      },
+      "volleys": {
+        "type": "int"
+      }
     },
-    "relationships": {
-        "belongs_to": {
-            "player" : ["club", "nation", "league", "card_type", "player_data"],
-            "club" : ["league"]
-        }
+    "player_info": {
+      "height": {
+        "type": "int"
+      },
+      "weight": {
+        "type": "int"
+      },
+      "age": {
+        "type": "int"
+      },
+      "foot": {
+        "type": "tinyint"
+      },
+      "skillmoves": {
+        "type": "tinyint"
+      },
+      "quality": {
+        "type": "tinyint"
+      },
+      "atkworkrate": {
+        "type": "tinyint"
+      },
+      "defworkrate": {
+        "type": "tinyint"
+      }
+    },
+    "nations": {
+      "name": {
+        "type": "varchar"
+      }
+    },
+    "leagues": {
+      "name": {
+        "type": "varchar"
+      }
+    },
+    "clubs": {
+      "name": {
+        "type": "varchar"
+      }
+    },
+    "card_types": {
+      "name": {
+        "type": "varchar"
+      }
     }
+  },
+  "relationships": {
+    "belongs_to": {
+      "player": [
+        "club",
+        "nation",
+        "league",
+        "card_type",
+        "player_data"
+      ],
+      "club": [
+        "league"
+      ]
+    }
+  }
 }
