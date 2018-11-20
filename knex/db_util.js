@@ -1,6 +1,6 @@
 const fs = require('fs')
-const util = require('./util.js')
-const knex = require('./knex/knex.js')
+const util = require('../util.js')
+const knex = require('./knex.js')
 let attributes = require('./attributes.json')
 let schema = require('./schema.json')
 
@@ -88,23 +88,11 @@ const generate_db_schema = async () => {
         console.log(err)
     }).finally(() => { 
         knex.destroy();
+        fs.writeFileSync('schema.json', JSON.stringify(schema, null, 2));
     })
 }
 
-// generate_db_schema().then(()=> {
-//     fs.writeFileSync('schema.json', JSON.stringify(schema, null, 2))
-// }).catch((err) => {
-//     console.log(err)
-// })
-
-const parse_fut_data = async => {
-
-}
-
-const parse_page = async => {
-
-}
-
-const parse_player = async => {
-
+module.exports = {
+    write_attributes: write_attributes,
+    generate_schema: generate_db_schema
 }
