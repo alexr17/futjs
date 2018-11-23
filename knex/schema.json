@@ -5,6 +5,9 @@
     "page_count": 0,
     "unsuccessful": []
   },
+  "db_information": {
+    "updated_at": 0
+  },
   "tables": {
     "players": {
       "name": {

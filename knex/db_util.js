@@ -4,7 +4,6 @@ const knex = require('./knex.js')
 let attributes = require('./attributes.json')
 let schema = require('./schema.json')
 
-const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes', 'id']
 
 /**
@@ -12,7 +11,7 @@ const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate'
  * generates an object based on those parameters, writing that object
  * to a file.
  */
-const write_attributes = async () => {
+const write_attributes = async (url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
     if (Object.keys(attributes).length > 0) return false;
     try {
         const json = await util.http_fetch(url + '1', 'json')
@@ -88,6 +87,7 @@ const generate_db_schema = async () => {
         console.log(err)
     }).finally(() => { 
         knex.destroy();
+        schema.table.updated_at = Date.now()
         fs.writeFileSync('schema.json', JSON.stringify(schema, null, 2));
     })
 }
