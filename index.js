@@ -2,31 +2,29 @@ require('dotenv').config();
 const db_util = require('./knex/db_util.js');
 const util = require('./util.js')
 const db_import = require('./knex/db_import.js')
-const knex = require('./knex/knex.js')
 const GenericFutObj = require('./generic.js')
+const schema = require('./knex/schema.json')
 /*
 db_util.generate_schema();
 */
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
-const find_or_create_id = async (type) => {
-    const data = await util.http_fetch(url + '1', 'json')
-    const g = GenericFutObj.prototype.create_row_object(data.items[0],type)
-    const key = 'name';
-    const db_obj = await knex.from(type).where(key, g.data[key])
-    let id = null
-    if (db_obj.length) {
-        //get the id from the resp
-        id = db_obj[0].id
-    } else {
-        //insert nation into the database and return name
-        id = (await knex(type).insert(g.data).returning('id'))[0];
-    }
-    if (!id) {
-        throw "could not get an id for "
-    }
-    knex.destroy()
-    g.id = id;
-    //write to file successfully got id
-    return g;
+const find_or_create_id = async () => {
+    const table_names = ['nations', 'leagues', 'clubs', 'card_types', 'player_stats', 'player_info', 'players']
+
+        const data = await util.http_fetch(url + '1', 'json').then(d => {
+            return d;
+        }).catch(e => {
+            console.log(e)
+            return null;
+        })
+        if (data) {
+            //execute code
+            for (let player_obj of data.items) {
+                let g_nation = await GenericFutObj.prototype.create_row_object(player_obj, 'nations')
+                let g_league = await GenericFutObj.prototype.create_row_object(player_obj, 'leagues')
+                let g_club = await GenericFutObj.prototype.create_row_object(player_obj, 'clubs', {league_id: g_league.id})
+            }
+        }
+    GenericFutObj.prototype.kill_knex();
 }
-find_or_create_id('nations')
+find_or_create_id()

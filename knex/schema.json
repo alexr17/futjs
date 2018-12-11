@@ -27,6 +27,9 @@
       }
     },
     "player_stats": {
+      "fut_id": {
+        "type": "int"
+      },
       "composure": {
         "type": "int"
       },
@@ -128,6 +131,9 @@
       }
     },
     "player_info": {
+      "fut_id": {
+        "type": "int"
+      },
       "height": {
         "type": "int"
       },
