@@ -7,8 +7,8 @@ const create_row_object = (table_name, obj) => {
         for (let col of player_cols) {
             player[col] = obj[col]
         }
-        player['fut_id'] = obj['id']
-        player['base_fut_id'] = obj['baseId']
+        player['fut_id'] = Number(obj['id'])
+        player['base_fut_id'] = Number(obj['baseId'])
         return player;
     } else if (['nations', 'leagues', 'clubs'].includes(table_name)) {
         let row = {}
@@ -16,13 +16,18 @@ const create_row_object = (table_name, obj) => {
         for (let col of cols) {
             row[col] = obj[table_name.slice(0, -1)][col]
         }
+        return row;
     } else {
-        //TODO: this
+        throw "UserE: invalid table name specified"
     }
 }
 
 Array.prototype.intersect = function(...a) {
     return [this,...a].reduce((p,c) => p.filter(e => c.includes(e)));
+}
+
+module.exports = {
+    create_row_object
 }
 /*
     1. Check if nation exists
