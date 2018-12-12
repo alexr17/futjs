@@ -6,7 +6,7 @@ class GenericFutObj {
     }
 
 }
-GenericFutObj.prototype.create_row_object = async function(player_api_obj, type, table_ids = {}, key='name') {
+GenericFutObj.prototype.create_fut_object = async function(player_api_obj, type, table_ids = {}, key='name') {
     let row = {}
     const cols = Object.keys(this.schema.tables[type])
 
@@ -37,7 +37,25 @@ GenericFutObj.prototype.create_row_object = async function(player_api_obj, type,
     return g;
 }
 
-GenericFutObj.prototype.create_player_object = async function(player_api_obj, type, table_ids={}, key='fut_id')
+GenericFutObj.prototype.create_player_object = async function(player_api_obj, type, table_ids={}, key='fut_id') {
+    let player = {}
+    const player_cols = Object.keys(this.schema.tables[type])
+
+    for (let col of player_cols) {
+        player[col] = player_api_obj[col]
+    }
+    for (let e in table_ids) {
+        player[e] = table_ids[e]
+    }
+    
+    if (type == 'players') {
+        player['fut_id'] = Number(player_api_obj['id'])
+        player['base_fut_id'] = Number(player_api_obj['baseId'])
+    }
+
+
+    return player;
+}
 
 GenericFutObj.prototype.kill_knex = function() {
     knex.destroy();

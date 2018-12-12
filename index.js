@@ -17,12 +17,18 @@ const find_or_create_id = async () => {
             console.log(e)
             return null;
         })
+        console.log(data)
         if (data) {
             //execute code
             for (let player_obj of data.items) {
-                let g_nation = await GenericFutObj.prototype.create_row_object(player_obj, 'nations')
-                let g_league = await GenericFutObj.prototype.create_row_object(player_obj, 'leagues')
-                let g_club = await GenericFutObj.prototype.create_row_object(player_obj, 'clubs', {league_id: g_league.id})
+                if (!player_obj.isIcon) {
+                    console.log(player_obj)
+                }
+                let g_nation = await GenericFutObj.prototype.create_fut_object(player_obj, 'nations')
+                let g_league = await GenericFutObj.prototype.create_fut_object(player_obj, 'leagues')
+                let g_club = await GenericFutObj.prototype.create_fut_object(player_obj, 'clubs', {league_id: g_league.id})
+                //let g_ct = await GenericFutObj.prototype.create_fut_object(player_obj, 'card_types')
+                //console.log(g_ct)
             }
         }
     GenericFutObj.prototype.kill_knex();
