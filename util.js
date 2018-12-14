@@ -1,4 +1,10 @@
 const fetch = require('node-fetch')
+const isOnline = require('is-online');
+
+const is_online = async () => {
+	return await isOnline();
+	//=> true
+}
 /**
  * A simple async function to get json from a url
  * @param {String} url 
