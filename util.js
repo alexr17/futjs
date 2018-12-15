@@ -13,7 +13,7 @@ const http_fetch = async (url, type = 'html') => {
     //short timeout because we have a lot of pages to get through
     if (throttle + 1000 > Date.now()) {
         console.log("Notice: api is being hit faster than once per second")
-        await sleep(1000) // sleep for a second
+        await sleep(2000) // sleep for a second
     }
     throttle = Date.now();
     const response = await fetch(url, { timeout: 5000 })
@@ -29,8 +29,6 @@ const http_fetch = async (url, type = 'html') => {
 module.exports = {
     http_fetch
 }
-function sleep(ms){
-    return new Promise(resolve=>{
-        setTimeout(resolve,ms)
-    })
-}
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }

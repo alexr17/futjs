@@ -12,8 +12,11 @@ const import_data = async () => {
         try {
             const data = await util.http_fetch(url + p_num, 'json')
             if (data) {
-                const errors = load_player_data(data);
+                const errors = await load_player_data(data);
+                console.log(`Completed page: ${p_num}`)
                 //check if errors have shit
+                if (Object.keys(errors) != 0)
+                    console.log(errors)
             }
         }
         catch (err) {
@@ -25,9 +28,11 @@ const import_data = async () => {
 import_data().then(_=> {
     fs.writeFileSync("data/player_errors.json", JSON.stringify(player_errors, null, 2))
     fs.writeFileSync("data/api_progress.json", JSON.stringify(api_status, null, 2))
+    console.log("all done")
     require('./knex/knex.js').destroy()
 })
 const load_player_data = async (raw_api_data) => {
+    let player_errors = {}
     if (raw_api_data)
     {
         for (let player_obj of raw_api_data.items) {

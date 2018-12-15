@@ -14,6 +14,10 @@ module.exports = {
       directory: './knex/migrations',
       tableName: 'knex_migrations',
     },
+    pool: {
+      min: 2,
+      max: 50,
+    }
   }
 
 };
