@@ -10,7 +10,8 @@ const is_online = async () => {
  * @param {String} url 
  */
 const http_fetch = async (url, type = 'html') => {
-    const response = await fetch(url).catch((err) => console.log(err));
+    //short timeout because we have a lot of pages to get through
+    const response = await fetch(url, { timeout: 2000 })
 
     if (type == 'html')
         return response.text();

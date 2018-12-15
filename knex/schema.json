@@ -1,10 +1,4 @@
 {
-  "api_information": {
-    "player_count": 0,
-    "results_per_page": 0,
-    "page_count": 0,
-    "unsuccessful": []
-  },
   "db_information": {
     "updated_at": 0
   },
@@ -114,6 +108,9 @@
       "standingtackle": {
         "type": "int"
       },
+      "slidingtackle": {
+        "type": "int"
+      },
       "stamina": {
         "type": "int"
       },
@@ -138,34 +135,65 @@
         "type": "int"
       },
       "foot": {
-        "type": "tinyint"
+        "type": "tinyint",
+        "mapping": {
+          "Left": 0,
+          "Right": 1
+        }
       },
-      "skillmoves": {
+      "skillMoves": {
         "type": "tinyint"
       },
       "quality": {
-        "type": "tinyint"
+        "type": "tinyint",
+        "mapping": {
+          "bronze": 0,
+          "silver": 1,
+          "gold": 2
+        }
       },
-      "atkworkrate": {
-        "type": "tinyint"
+      "atkWorkRate": {
+        "type": "tinyint",
+        "mapping": {
+          "Low": 0,
+          "Medium": 1,
+          "High": 2
+        }
       },
-      "defworkrate": {
-        "type": "tinyint"
+      "defWorkRate": {
+        "type": "tinyint",
+        "mapping": {
+          "Low": 0,
+          "Medium": 1,
+          "High": 2
+        }
+      },
+      "rarityId": {
+        "type": "int"
       }
     },
     "nations": {
       "name": {
         "type": "varchar"
+      },
+      "fut_id": {
+        "type": "int"
       }
     },
     "leagues": {
       "name": {
         "type": "varchar"
+      },
+      "fut_id": {
+        "type": "int"
       }
     },
     "clubs": {
       "name": {
         "type": "varchar"
+      },
+      "fut_id": {
+        "type": "int"
       }
     },
     "card_types": {

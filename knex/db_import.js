@@ -1,33 +1,24 @@
 let schema = require('./schema.json')
+const knex = require('./knex.js')
 
-const create_row_object = (table_name, obj) => {
-    if (table_name == 'players') {
-        let player = {}
-        const player_cols = Object.keys(schema.tables.players)
-        for (let col of player_cols) {
-            player[col] = obj[col]
-        }
-        player['fut_id'] = Number(obj['id'])
-        player['base_fut_id'] = Number(obj['baseId'])
-        return player;
-    } else if (['nations', 'leagues', 'clubs'].includes(table_name)) {
-        let row = {}
-        const cols = Object.keys(schema.tables[table_name])
-        for (let col of cols) {
-            row[col] = obj[table_name.slice(0, -1)][col]
-        }
-        return row;
+const find_or_create_id = async function(obj, type, key='fut_id') {
+    const db_obj = await knex.from(type).where(key, obj.data[key])
+    let id = null
+    if (db_obj.length) {
+        //get the id from the resp
+        id = db_obj[0].id
     } else {
-        throw "UserE: invalid table name specified"
+        //insert nation into the database and return name
+        id = (await knex(type).insert(obj.data).returning('id'))[0];
     }
-}
-
-Array.prototype.intersect = function(...a) {
-    return [this,...a].reduce((p,c) => p.filter(e => c.includes(e)));
+    if (!id) {
+        throw "could not get an id for " + type
+    }
+    return id;
 }
 
 module.exports = {
-    create_row_object
+    find_or_create_id
 }
 /*
     1. Check if nation exists
