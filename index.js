@@ -7,9 +7,10 @@ let api_status = require('./data/api_progress');
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 const import_data = async () => {
 
-    for (; api_status.pages_imported <= 50; api_status.pages_imported++) {
+    const pages = api_status.errored_pages.concat(Array.from({length: api_status.total_pages - api_status.pages_imported}, (_, k) => k + api_status.pages_imported)); 
+    for (let p_num of pages) {
         try {
-            const data = await util.http_fetch(url + api_status.pages_imported, 'json')
+            const data = await util.http_fetch(url + p_num, 'json')
             if (data) {
                 const errors = load_player_data(data);
                 //check if errors have shit
@@ -17,7 +18,7 @@ const import_data = async () => {
         }
         catch (err) {
             console.log(err)
-            api_status.errored_pages.push(api_status.pages_imported);
+            api_status.errored_pages.push(p_num);
         }
     }
 }
