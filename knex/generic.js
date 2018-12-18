@@ -1,5 +1,6 @@
-const knex = require('./knex/knex.js')
-const db_import = require('./knex/db_import.js')
+const db_import = require('./db_import.js')
+const knex = require('./knex.js')
+
 class GenericFutObj {
     constructor(data, type) {
         this.data = data;
@@ -11,7 +12,7 @@ GenericFutObj.prototype.create_fut_object = async function(player_api_obj, type,
     let row = load_object(player_api_obj[type.slice(0,-1)], Object.keys(this.schema.tables[type]), table_ids, type)
     
     let g = new GenericFutObj(row, type);
-    let id = await db_import.find_or_create_id(g, type);
+    let id = await find_or_create_id(g, type);
     g.id = id;
     
     return g;
@@ -26,13 +27,13 @@ GenericFutObj.prototype.create_player_object = async function(player_api_obj, ty
     }
 
     p = new GenericFutObj(row, type);
-    let id = await db_import.find_or_create_id(p, type);
+    let id = await find_or_create_id(p, type);
     p.id = id;
 
     return p;
 }
 
-GenericFutObj.prototype.schema = require('./knex/schema.json');
+GenericFutObj.prototype.schema = require('./schema.json');
 module.exports = GenericFutObj
 
 const load_object = function(api_obj, cols, table_ids, type, key='fut_id') {
@@ -54,4 +55,20 @@ const format = function(val, key, table) {
     if (mapping)
         return mapping[val]
     return val
+}
+
+const find_or_create_id = async function(obj, type, key='fut_id') {
+    const db_obj = await knex.from(type).where(key, obj.data[key])
+    let id = null
+    if (db_obj.length) {
+        //get the id from the resp
+        id = db_obj[0].id
+    } else {
+        //insert nation into the database and return name
+        id = (await knex(type).insert(obj.data).returning('id'))[0];
+    }
+    if (!id) {
+        throw "could not get an id for " + type
+    }
+    return id;
 }

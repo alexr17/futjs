@@ -1,24 +1,66 @@
-let schema = require('./schema.json')
-const knex = require('./knex.js')
+const GenericFutObj = require('./generic.js')
+const util = require('../util.js')
 
-const find_or_create_id = async function(obj, type, key='fut_id') {
-    const db_obj = await knex.from(type).where(key, obj.data[key])
-    let id = null
-    if (db_obj.length) {
-        //get the id from the resp
-        id = db_obj[0].id
-    } else {
-        //insert nation into the database and return name
-        id = (await knex(type).insert(obj.data).returning('id'))[0];
+
+const import_from_api = async (api_status, url="https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
+
+    const max_page = (await util.http_fetch(url + 1, 'json'))['totalPages']
+    const pages = Array.from({length: max_page-api_status.max_page_imported}, (_, k) => k+api_status.max_page_imported+1); 
+    for (let p_num of pages) {
+        try {
+            const data = await util.http_fetch(url + p_num, 'json')
+            if (data) {
+                const errors = await load_player_data(data);
+                console.log(`Completed page: ${p_num}`)
+                //check if errors have shit
+                if (Object.keys(errors) != 0)
+                    console.log(errors)
+            }
+            api_status.max_page_imported++;
+        }
+        catch (err) {
+            console.log(err)
+            api_status.errored_pages.push(p_num);
+        }
     }
-    if (!id) {
-        throw "could not get an id for " + type
-    }
-    return id;
+    return api_status
 }
 
 module.exports = {
-    find_or_create_id
+    import_from_api: import_from_api
+}
+
+const load_player_data = async (raw_api_data) => {
+    let player_errors = {}
+    if (raw_api_data)
+    {
+        for (let player_obj of raw_api_data.items) {
+            try {
+                let g_nation = await GenericFutObj.prototype.create_fut_object(player_obj, 'nations')
+                let g_league = await GenericFutObj.prototype.create_fut_object(player_obj, 'leagues')
+                let g_club = await GenericFutObj.prototype.create_fut_object(player_obj, 'clubs', {league_id: g_league.id})
+                let g_pinfo = await GenericFutObj.prototype.create_player_object(player_obj, 'player_info')
+                let g_pstats = await GenericFutObj.prototype.create_player_object(player_obj, 'player_stats')
+                let g_player = await GenericFutObj.prototype.create_player_object(player_obj, 'players', 
+                {
+                    league_id: g_league.id,
+                    nation_id: g_nation.id,
+                    club_id: g_club.id,
+                    player_info_id: g_pinfo.id,
+                    player_stats_id: g_pstats.id
+                })
+            } catch (err) {
+                console.log(err)
+                console.log("Logging failures to data/player_errors.json")
+                player_errors.count += 1;
+                player_errors.objs.push(player_obj)
+            }
+        }
+    }
+    else {
+        throw "No given data!"
+    }
+    return player_errors;
 }
 /*
     1. Check if nation exists
