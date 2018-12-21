@@ -1,5 +1,6 @@
 const GenericFutObj = require('./generic.js')
 const util = require('../util.js')
+const schema = require('./schema.json')
 
 
 const import_from_api = async (api_status, url="https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
@@ -32,28 +33,40 @@ module.exports = {
 
 const load_player_data = async (raw_api_data) => {
     let player_errors = {}
+    const table_names = Object.keys(schema.tables)
     if (raw_api_data)
     {
         for (let player_obj of raw_api_data.items) {
             try {
-                let g_nation = await GenericFutObj.prototype.create_fut_object(player_obj, 'nations')
-                let g_league = await GenericFutObj.prototype.create_fut_object(player_obj, 'leagues')
-                let g_club = await GenericFutObj.prototype.create_fut_object(player_obj, 'clubs', {league_id: g_league.id})
-                let g_pinfo = await GenericFutObj.prototype.create_player_object(player_obj, 'player_info')
-                let g_pstats = await GenericFutObj.prototype.create_player_object(player_obj, 'player_stats')
-                let g_player = await GenericFutObj.prototype.create_player_object(player_obj, 'players', 
-                {
-                    league_id: g_league.id,
-                    nation_id: g_nation.id,
-                    club_id: g_club.id,
-                    player_info_id: g_pinfo.id,
-                    player_stats_id: g_pstats.id
-                })
+                let table_ids = {}
+                for (let table of table_names) {
+                    if (['nations', 'leagues', 'clubs'].includes(table)) {
+                        let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
+                        let g = new GenericFutObj(row, table);
+                        let id = await g.load_into_db();
+                        
+                        table_ids[table.slice(0,-1) + "_id"] = id;
+                        
+                    } else if (['player_stats', 'player_info', 'players'].includes(table)) {
+                        let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
+                        let g = new GenericFutObj(row, table);
+                        let id = await g.load_into_db();
+                        //custom player id tagging
+                        table_ids[table + "_id"] = id;
+                        if (table == 'players') {
+                            row['base_fut_id'] = Number(player_obj['baseId'])
+                        }
+                    } else {
+                        throw ("Invalid table name: " + table + " in load player data")
+                    }
+
+                    console.log(table_ids)
+                }
             } catch (err) {
                 console.log(err)
                 console.log("Logging failures to data/player_errors.json")
                 player_errors.count += 1;
-                player_errors.objs.push(player_obj)
+                //player_errors.objs.push(player_obj)
             }
         }
     }
@@ -62,13 +75,24 @@ const load_player_data = async (raw_api_data) => {
     }
     return player_errors;
 }
-/*
-    1. Check if nation exists
-    2. If not then insert nation object
-    3. Check if league exists
-    4. If not then insert league object
-    5. Check if club exists
-    6. If not then insert club object
-    2. Insert player object (make sure to return player_id)
-    3. Create
-*/
+
+const extract_data_from_api = function(api_obj, cols, table_ids, type, key='fut_id') {
+    let obj = {}
+    //load data into object
+    for (let col of cols) {
+        obj[col.toLowerCase()] = format(api_obj[col], col, type)
+    }
+    //set corresponding table ids
+    for (let e in table_ids) {
+        obj[e] = table_ids[e]
+    }
+    obj[key] = Number(api_obj['id'])
+    return obj;
+}
+
+const format = function(val, key, table) {
+    const mapping = schema.tables[table][key].mapping
+    if (mapping)
+        return mapping[val]
+    return val
+}

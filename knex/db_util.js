@@ -57,39 +57,27 @@ const validate_attribute = (key, value) => {
  */
 const generate_db_schema = async () => {
     //TODO: rewrite this cleaner
-    return knex.table('players').columnInfo().then(columns => {
+    const tables = ['players', 'player_stats', 'player_info', 'nations', 'leagues', 'clubs']
+    for (let table of tables) {
+        const columns = await knex.table(table).columnInfo();
+        //console.log(columns)
         for (let key in columns) {
             //TODO: define global variables somewhere instead of here
-            if ((key.includes('id') || ['created_at', 'updated_at'].includes(key)) && !['fut_id', 'base_fut_id'].includes(key))
+            if (['created_at', 'updated_at', 'id'].includes(key))
                 continue;
             let col = columns[key]
-            schema.tables.players[key] = {
-                type: col.type
+            if (typeof schema.tables[table][key] == 'undefined') {
+                schema.tables[table][key] = {
+                    type: col.type
+                }
             }
         }
-        let tables = ['player_stats', 'player_info', 'nations', 'leagues', 'clubs', 'card_types']
-        return Promise.all(tables.map(table => {
-            return knex.table(table).columnInfo().then(columns => {
-                for (let key in columns) {
-                    if (key.includes('id') || ['created_at', 'updated_at'].includes(key))
-                        continue;
-                    let col = columns[key]
-                    schema.tables[table] = schema.tables[table] || {};
-                    schema.tables[table][key] = {
-                        type: col.type
-                    }
-                }
-            }).catch((err) => {
-                console.log(err)
-            })
-        }))
-    }).catch((err) => {
-        console.log(err)
-    }).finally(_=> { 
-        knex.destroy();
-        schema.table.updated_at = Date.now()
-        fs.writeFileSync('schema.json', JSON.stringify(schema, null, 2));
-    })
+        console.log(schema)
+    }
+    console.log(schema)
+    knex.destroy();
+    schema.updated_at = Date.now()
+    fs.writeFileSync('./knex/schema.json', JSON.stringify(schema, null, 2));
 }
 
 module.exports = {

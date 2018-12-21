@@ -18,6 +18,24 @@
       },
       "base_fut_id": {
         "type": "int"
+      },
+      "club_id": {
+        "type": "int"
+      },
+      "league_id": {
+        "type": "int"
+      },
+      "nation_id": {
+        "type": "int"
+      },
+      "card_type_id": {
+        "type": "int"
+      },
+      "player_stats_id": {
+        "type": "int"
+      },
+      "player_info_id": {
+        "type": "int"
       }
     },
     "player_stats": {
@@ -122,6 +140,9 @@
       },
       "volleys": {
         "type": "int"
+      },
+      "fut_id": {
+        "type": "int"
       }
     },
     "player_info": {
@@ -170,6 +191,9 @@
       },
       "rarityId": {
         "type": "int"
+      },
+      "fut_id": {
+        "type": "int"
       }
     },
     "nations": {
@@ -194,11 +218,9 @@
       },
       "fut_id": {
         "type": "int"
-      }
-    },
-    "card_types": {
-      "name": {
-        "type": "varchar"
+      },
+      "league_id": {
+        "type": "int"
       }
     }
   },
@@ -215,5 +237,6 @@
         "league"
       ]
     }
-  }
+  },
+  "updated_at": 1545383400993
 }
