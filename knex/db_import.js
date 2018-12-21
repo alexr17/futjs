@@ -5,7 +5,7 @@ const util = require('../util.js')
 const import_from_api = async (api_status, url="https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
 
     const max_page = (await util.http_fetch(url + 1, 'json'))['totalPages']
-    const pages = Array.from({length: max_page-api_status.max_page_imported}, (_, k) => k+api_status.max_page_imported+1); 
+    const pages = Array.from({length: max_page-api_status.max_page_imported+1}, (_, k) => k+api_status.max_page_imported); 
     for (let p_num of pages) {
         try {
             const data = await util.http_fetch(url + p_num, 'json')
@@ -16,7 +16,7 @@ const import_from_api = async (api_status, url="https://www.easports.com/fifa/ul
                 if (Object.keys(errors) != 0)
                     console.log(errors)
             }
-            api_status.max_page_imported++;
+            api_status.max_page_imported = p_num
         }
         catch (err) {
             console.log(err)
