@@ -194,6 +194,18 @@
       },
       "fut_id": {
         "type": "int"
+      },
+      "atkworkrate": {
+        "type": "tinyint"
+      },
+      "defworkrate": {
+        "type": "tinyint"
+      },
+      "rarityid": {
+        "type": "int"
+      },
+      "skillmoves": {
+        "type": "tinyint"
       }
     },
     "nations": {
@@ -238,5 +250,5 @@
       ]
     }
   },
-  "updated_at": 1545383400993
+  "updated_at": 1545648725263
 }

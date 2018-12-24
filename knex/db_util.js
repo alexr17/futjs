@@ -72,9 +72,7 @@ const generate_db_schema = async () => {
                 }
             }
         }
-        console.log(schema)
     }
-    console.log(schema)
     knex.destroy();
     schema.updated_at = Date.now()
     fs.writeFileSync('./knex/schema.json', JSON.stringify(schema, null, 2));

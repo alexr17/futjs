@@ -7,7 +7,7 @@ class GenericFutObj {
     }
 
     async load_into_db() {
-        let id = await find_or_create_id();
+        let id = await this.find_or_create_id();
         this.id = id;
         return id;
     }

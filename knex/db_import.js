@@ -6,6 +6,8 @@ const schema = require('./schema.json')
 const import_from_api = async (api_status, url="https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
 
     const max_page = (await util.http_fetch(url + 1, 'json'))['totalPages']
+    console.log("Going from page: " + api_status.max_page_imported + " through " + max_page)
+    
     const pages = Array.from({length: max_page-api_status.max_page_imported+1}, (_, k) => k+api_status.max_page_imported); 
     for (let p_num of pages) {
         try {
@@ -24,7 +26,7 @@ const import_from_api = async (api_status, url="https://www.easports.com/fifa/ul
             api_status.errored_pages.push(p_num);
         }
     }
-    return api_status
+    return api_status;
 }
 
 module.exports = {
@@ -44,14 +46,12 @@ const load_player_data = async (raw_api_data) => {
                         let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
                         let g = new GenericFutObj(row, table);
                         let id = await g.load_into_db();
-                        
                         table_ids[table.slice(0,-1) + "_id"] = id;
                         
                     } else if (['player_stats', 'player_info', 'players'].includes(table)) {
                         let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
                         let g = new GenericFutObj(row, table);
                         let id = await g.load_into_db();
-                        //custom player id tagging
                         table_ids[table + "_id"] = id;
                         if (table == 'players') {
                             row['base_fut_id'] = Number(player_obj['baseId'])
@@ -60,7 +60,7 @@ const load_player_data = async (raw_api_data) => {
                         throw ("Invalid table name: " + table + " in load player data")
                     }
 
-                    console.log(table_ids)
+                    //console.log(table_ids)
                 }
             } catch (err) {
                 console.log(err)
