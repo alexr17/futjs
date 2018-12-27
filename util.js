@@ -1,10 +1,6 @@
 const fetch = require('node-fetch')
 const isOnline = require('is-online');
 let throttle = Date.now()
-const is_online = async () => {
-	return await isOnline();
-	//=> true
-}
 /**
  * A simple async function to get json from a url
  * @param {String} url 
@@ -29,6 +25,10 @@ const http_fetch = async (url, type = 'html') => {
 module.exports = {
     http_fetch
 }
+/**
+ * Async-ified sleep function
+ * @param {Number} ms 
+ */
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }

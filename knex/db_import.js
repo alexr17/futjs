@@ -8,20 +8,21 @@ const import_from_api = async (api_status, url="https://www.easports.com/fifa/ul
     const max_page = (await util.http_fetch(url + 1, 'json'))['totalPages']
     console.log("Going from page: " + api_status.max_page_imported + " through " + max_page)
     
-    const pages = Array.from({length: max_page-api_status.max_page_imported+1}, (_, k) => k+api_status.max_page_imported); 
+    //get the pages
+    const pages = Array.from({length: max_page-api_status.max_page_imported+1}, (_, k) => k+api_status.max_page_imported);
+    
     for (let p_num of pages) {
         try {
             const data = await util.http_fetch(url + p_num, 'json')
             if (data) {
                 const errors = await load_player_data(data);
                 console.log(`Completed page: ${p_num}`)
-                //check if errors have shit
-                if (Object.keys(errors) != 0)
+                
+                if (Object.keys(errors) != 0) //check if errors
                     console.log(errors)
             }
             api_status.max_page_imported = p_num
-        }
-        catch (err) {
+        } catch (err) {
             console.log(err)
             api_status.errored_pages.push(p_num);
         }

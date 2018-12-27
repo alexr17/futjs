@@ -6,12 +6,19 @@ class GenericFutObj {
         this.type = type;
     }
 
+    /**
+     * Load self into db (async)
+     */
     async load_into_db() {
         let id = await this.find_or_create_id();
         this.id = id;
         return id;
     }
 
+    /**
+     * Load object or get id from db (async)
+     * @param {String} key 
+     */
     async find_or_create_id(key='fut_id') {
         const db_obj = await knex.from(this.type).where(key, this.data[key])
         let id = null;
