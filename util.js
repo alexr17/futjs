@@ -11,7 +11,7 @@ const is_online = async () => {
  */
 const http_fetch = async (url, type = 'html') => {
     //short timeout because we have a lot of pages to get through
-    if (throttle + 1000 > Date.now()) {
+    if (throttle + 1500 > Date.now()) {
         console.log("Notice: api is being hit faster than once per second")
         await sleep(2000) // sleep for a second
     }

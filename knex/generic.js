@@ -21,6 +21,9 @@ class GenericFutObj {
         } else {
             //insert and get id
             id = (await knex(this.type).insert(this.data).returning('id'))[0];
+            if (this.type == "players") {
+                GenericFutObj.new_objs++;
+            }
         }
         if (!id) {
             throw "Could not get an id for " + this.type
@@ -29,5 +32,7 @@ class GenericFutObj {
     }
 
 }
+
+GenericFutObj.new_objs = 0;
 
 module.exports = GenericFutObj

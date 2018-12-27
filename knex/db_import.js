@@ -26,6 +26,7 @@ const import_from_api = async (api_status, url="https://www.easports.com/fifa/ul
             api_status.errored_pages.push(p_num);
         }
     }
+    console.log(`Done loading ${GenericFutObj.new_objs} fut players into db`);
     return api_status;
 }
 
@@ -46,27 +47,25 @@ const load_player_data = async (raw_api_data) => {
                         let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
                         let g = new GenericFutObj(row, table);
                         let id = await g.load_into_db();
-                        table_ids[table.slice(0,-1) + "_id"] = id;
-                        
+                        table_ids[table.slice(0,-1)] = id;
                     } else if (['player_stats', 'player_info', 'players'].includes(table)) {
                         let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
+                        if (table == 'players') {
+                            row['base_fut_id'] = Number(player_obj['baseId'])    
+                        }
                         let g = new GenericFutObj(row, table);
                         let id = await g.load_into_db();
-                        table_ids[table + "_id"] = id;
-                        if (table == 'players') {
-                            row['base_fut_id'] = Number(player_obj['baseId'])
-                        }
+                        table_ids[table] = id;
+                        
                     } else {
                         throw ("Invalid table name: " + table + " in load player data")
                     }
-
-                    //console.log(table_ids)
+                    
                 }
             } catch (err) {
                 console.log(err)
                 console.log("Logging failures to data/player_errors.json")
                 player_errors.count += 1;
-                //player_errors.objs.push(player_obj)
             }
         }
     }
@@ -76,15 +75,16 @@ const load_player_data = async (raw_api_data) => {
     return player_errors;
 }
 
-const extract_data_from_api = function(api_obj, cols, table_ids, type, key='fut_id') {
+const extract_data_from_api = function(api_obj, cols, table_ids, table_name, key='fut_id') {
     let obj = {}
     //load data into object
     for (let col of cols) {
-        obj[col.toLowerCase()] = format(api_obj[col], col, type)
+        obj[col.toLowerCase()] = format(api_obj[col], col, table_name)
     }
     //set corresponding table ids
-    for (let e in table_ids) {
-        obj[e] = table_ids[e]
+    for (let table in table_ids) {
+        if (schema.relationships.belongs_to[table_name].includes(table))
+            obj[table + "_id"] = table_ids[table]
     }
     obj[key] = Number(api_obj['id'])
     return obj;

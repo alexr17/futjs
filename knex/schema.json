@@ -3,38 +3,30 @@
     "updated_at": 0
   },
   "tables": {
-    "players": {
+    "nations": {
       "name": {
         "type": "varchar"
       },
-      "rating": {
+      "fut_id": {
         "type": "int"
+      }
+    },
+    "leagues": {
+      "name": {
+        "type": "varchar"
       },
-      "position": {
+      "fut_id": {
+        "type": "int"
+      }
+    },
+    "clubs": {
+      "name": {
         "type": "varchar"
       },
       "fut_id": {
         "type": "int"
       },
-      "base_fut_id": {
-        "type": "int"
-      },
-      "club_id": {
-        "type": "int"
-      },
       "league_id": {
-        "type": "int"
-      },
-      "nation_id": {
-        "type": "int"
-      },
-      "card_type_id": {
-        "type": "int"
-      },
-      "player_stats_id": {
-        "type": "int"
-      },
-      "player_info_id": {
         "type": "int"
       }
     },
@@ -194,60 +186,57 @@
       },
       "fut_id": {
         "type": "int"
-      },
-      "atkworkrate": {
-        "type": "tinyint"
-      },
-      "defworkrate": {
-        "type": "tinyint"
-      },
-      "rarityid": {
-        "type": "int"
-      },
-      "skillmoves": {
-        "type": "tinyint"
       }
     },
-    "nations": {
+    "players": {
       "name": {
+        "type": "varchar"
+      },
+      "rating": {
+        "type": "int"
+      },
+      "position": {
         "type": "varchar"
       },
       "fut_id": {
         "type": "int"
-      }
-    },
-    "leagues": {
-      "name": {
-        "type": "varchar"
       },
-      "fut_id": {
+      "base_fut_id": {
         "type": "int"
-      }
-    },
-    "clubs": {
-      "name": {
-        "type": "varchar"
       },
-      "fut_id": {
+      "club_id": {
         "type": "int"
       },
       "league_id": {
+        "type": "int"
+      },
+      "nation_id": {
+        "type": "int"
+      },
+      "player_stats_id": {
+        "type": "int"
+      },
+      "player_info_id": {
         "type": "int"
       }
     }
   },
   "relationships": {
     "belongs_to": {
-      "player": [
+      "players": [
         "club",
         "nation",
         "league",
-        "card_type",
-        "player_data"
+        "player_stats",
+        "player_info"
       ],
-      "club": [
+      "clubs": [
         "league"
-      ]
+      ],
+      "nations": [],
+      "leagues": [],
+      "player_stats": [],
+      "player_info": []
     }
   },
   "updated_at": 1545648725263
