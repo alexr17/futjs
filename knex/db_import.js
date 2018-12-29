@@ -35,43 +35,41 @@ module.exports = {
     import_from_api: import_from_api
 }
 
+/**
+ * Load player data from one page
+ * @param {Object} raw_api_data 
+ */
 const load_player_data = async (raw_api_data) => {
     let player_errors = {}
     const table_names = Object.keys(schema.tables)
-    if (raw_api_data)
-    {
-        for (let player_obj of raw_api_data.items) {
-            try {
-                let table_ids = {}
-                for (let table of table_names) {
-                    if (['nations', 'leagues', 'clubs'].includes(table)) {
-                        let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
-                        let g = new GenericFutObj(row, table);
-                        let id = await g.load_into_db();
-                        table_ids[table.slice(0,-1)] = id;
-                    } else if (['player_stats', 'player_info', 'players'].includes(table)) {
-                        let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
-                        if (table == 'players') {
-                            row['base_fut_id'] = Number(player_obj['baseId'])    
-                        }
-                        let g = new GenericFutObj(row, table);
-                        let id = await g.load_into_db();
-                        table_ids[table] = id;
-                        
-                    } else {
-                        throw ("Invalid table name: " + table + " in load player data")
-                    }
-                    
-                }
-            } catch (err) {
-                console.log(err)
-                console.log("Logging failures to data/player_errors.json")
-                player_errors.count += 1;
-            }
-        }
+    
+    if (!raw_api_data || !raw_api_data.items) {
+        throw "Invalid input"
     }
-    else {
-        throw "No given data!"
+
+    for (let player_obj of raw_api_data.items) {
+        try {
+            let table_ids = {}
+            for (let table of table_names) {
+                if (['nations', 'leagues', 'clubs'].includes(table)) {
+                    let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
+                    table_ids[table.slice(0,-1)] = await (new GenericFutObj(row, table)).load_into_db();
+                } else if (['player_stats', 'player_info', 'players'].includes(table)) {
+                    let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
+                    //custom player tagging
+                    if (table == 'players') {
+                        row['base_fut_id'] = Number(player_obj['baseId'])    
+                    }
+                    table_ids[table] = await (new GenericFutObj(row, table)).load_into_db();
+                } else {
+                    throw ("Invalid table name: " + table + " in load player data")
+                }
+            }
+        } catch (err) {
+            console.log(err)
+            console.log("Logging failures to data/player_errors.json")
+            player_errors.count += 1;
+        }
     }
     return player_errors;
 }
