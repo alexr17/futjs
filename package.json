@@ -15,10 +15,10 @@
   "dependencies": {
     "dotenv": "^6.1.0",
     "express-generator": "^4.16.0",
-    "is-online": "^8.0.0",
     "knex": "^0.15.2",
     "mysql": "^2.16.0",
     "node-fetch": "^2.2.0",
     "util": "^0.11.1"
-  }
+  },
+  "devDependencies": {}
 }
