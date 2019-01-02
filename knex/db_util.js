@@ -29,6 +29,13 @@ const write_attributes = async (url = "https://www.easports.com/fifa/ultimate-te
 }
 
 /**
+ * Gets the total number of rows in the db
+ */
+const get_count = async (table_name='players') => {
+    return await knex(table_name).count();
+}
+
+/**
  * Determines if an attribute is valid (we want to keep it in the database)
  * @param {String} key 
  * @param {String} value 

@@ -1,17 +1,34 @@
 const GenericFutObj = require('./generic.js')
 const util = require('../util.js')
+const db_util = require('./db_util.js')
 const schema = require('./schema.json')
 
 
 const import_from_api = async (api_status, url="https://www.easports.com/fifa/ultimate-team/api/fut/item?page=") => {
 
-    const max_page = (await util.http_fetch(url + 1, 'json'))['totalPages']
+    const first_page = await util.http_fetch(url + 1, 'json');
+    const max_page = first_page['totalPages'];
+    const api_count = first_page['totalResults'];
+    const current_count = api_status.total_players;
+
+    console.log(`Current db player count: ${current_count}. API player count: ${api_count}`)
+
+    if (current_count == api_count) {
+        console.log("No new players to add. Exiting...")
+        return api_status;
+    }
     console.log("Going from page: " + api_status.max_page_imported + " through " + max_page)
     
     //get the pages
     const pages = Array.from({length: max_page-api_status.max_page_imported+1}, (_, k) => k+api_status.max_page_imported);
     
     for (let p_num of pages) {
+
+        if (current_count+GenericFutObj.new_objs == api_count) {
+            console.log("Finished adding new players. Exiting...")
+            break;
+        }
+
         try {
             const data = await util.http_fetch(url + p_num, 'json')
             if (data) {
@@ -21,13 +38,14 @@ const import_from_api = async (api_status, url="https://www.easports.com/fifa/ul
                 if (Object.keys(errors) != 0) //check if errors
                     console.log(errors)
             }
-            api_status.max_page_imported = p_num
+            api_status.max_page_imported = p_num;
         } catch (err) {
             console.log(err)
             api_status.errored_pages.push(p_num);
         }
     }
     console.log(`Done loading ${GenericFutObj.new_objs} fut players into db`);
+    api_status.total_players = current_count+GenericFutObj.new_objs;
     return api_status;
 }
 
