@@ -1,5 +1,5 @@
 const fs = require('fs')
-const util = require('../util.js')
+const util = require('../public/javascripts/util.js')
 const knex = require('./knex.js')
 let attributes = require('./attributes.json')
 let schema = require('./schema.json');

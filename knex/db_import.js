@@ -1,5 +1,5 @@
 const GenericFutObj = require('./generic.js')
-const util = require('../util.js')
+const util = require('../public/javascripts/util.js')
 const db_util = require('./db_util.js')
 const schema = require('./schema.json')
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
@@ -113,7 +113,6 @@ const load_player = async (player_obj, player_errors, table_names) => {
         }
     } catch (err) {
         console.log(err)
-        console.log("Logging failures to data/player_errors.json")
         player_errors.count += 1;
     }
 }
