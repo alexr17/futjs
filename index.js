@@ -1,6 +1,6 @@
 require('dotenv').config();
-const db_import = require('./knex/db_import.js')
-const db_util = require('./knex/db_util.js')
+const db_import = require('./knex/db_import.js');
+const db_util = require('./knex/db_util.js');
 const fs = require('fs');
 
 let api_status = require('./data/api_progress');

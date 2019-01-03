@@ -2,7 +2,7 @@ const fs = require('fs')
 const util = require('../util.js')
 const knex = require('./knex.js')
 let attributes = require('./attributes.json')
-let schema = require('./schema.json')
+let schema = require('./schema.json');
 
 const special_attributes = ['name', 'quality', 'foot', 'position', 'atkWorkRate', 'defWorkRate', 'attributes', 'id']
 
@@ -21,7 +21,7 @@ const write_attributes = async (url = "https://www.easports.com/fifa/ultimate-te
         }
         fs.writeFileSync("attributes.json", JSON.stringify(attributes, null, 2));
         return true;
-    } catch(error) {
+    } catch (error) {
         console.log(error)
         return false;
     }
@@ -31,32 +31,8 @@ const write_attributes = async (url = "https://www.easports.com/fifa/ultimate-te
 /**
  * Gets the total number of rows in the db
  */
-const get_count = async (table_name='players') => {
+const get_count = async (table_name = 'players') => {
     return await knex(table_name).count();
-}
-
-/**
- * Determines if an attribute is valid (we want to keep it in the database)
- * @param {String} key 
- * @param {String} value 
- */
-const validate_attribute = (key, value) => {
-    if (typeof (value) == 'object') {
-        if (Array.isArray(value)) return false;
-        let object = {};
-        if (key == "league") {
-            debugger;
-        }
-        for (let inner_key in value) {
-            object[inner_key] = validate_attribute(inner_key, value[inner_key]);
-        }
-        if (!Object.values(object).includes(true)) return false;
-        return object;
-    } else if (typeof (value) == 'number' || special_attributes.includes(key)) {
-        return true;
-    } else {
-        return false;
-    }
 }
 
 /**
@@ -88,4 +64,25 @@ const generate_db_schema = async () => {
 module.exports = {
     write_attributes: write_attributes,
     generate_schema: generate_db_schema
+}
+
+/**
+ * Determines if an attribute is valid (we want to keep it in the database)
+ * @param {String} key 
+ * @param {String} value 
+ */
+const validate_attribute = (key, value) => {
+    if (typeof (value) == 'object') {
+        if (Array.isArray(value)) return false;
+        let object = {};
+        for (let inner_key in value) {
+            object[inner_key] = validate_attribute(inner_key, value[inner_key]);
+        }
+        if (!Object.values(object).includes(true)) return false;
+        return object;
+    } else if (typeof (value) == 'number' || special_attributes.includes(key)) {
+        return true;
+    } else {
+        return false;
+    }
 }
