@@ -1,6 +1,6 @@
 const GenericFutObj = require('./generic.js')
 const util = require('../public/javascripts/util.js')
-const db_util = require('./db_util.js')
+const db_util = require('./util.js')
 const schema = require('./schema.json')
 const url = "https://www.easports.com/fifa/ultimate-team/api/fut/item?page="
 

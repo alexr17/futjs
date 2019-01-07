@@ -1,5 +1,4 @@
 const fetch = require('node-fetch')
-const isOnline = require('is-online');
 let throttle = Date.now()
 /**
  * A simple async function to get json from a url
