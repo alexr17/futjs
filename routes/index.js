@@ -9,9 +9,10 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/player', function(req, res, next) {
-  Player.get_obj('players', 'id', 33).then(player => {
-    player.get_html().finally(_=> {
-      res.render('player', { title: 'Player view', player: player});
+  Player.get_obj('players', 'id', 33).then(p => {
+    p.set_img_urls().finally(_=> {
+      console.log(p)
+      res.render('player', { title: 'Player view', player: p});
     })
   }).catch(err => {
     console.log(err);

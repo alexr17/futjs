@@ -104,7 +104,8 @@ const load_player = async (player_obj, player_errors, table_names) => {
                 let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
                 //custom player tagging
                 if (table == 'players') {
-                    row['base_fut_id'] = Number(player_obj['baseId'])    
+                    row['base_fut_id'] = Number(player_obj['baseId']);
+                    row['headshot_url'] = player_obj.headshot.imgUrl;  
                 }
                 table_ids[table] = await (new GenericFutObj(row, table)).load_into_db();
             } else {

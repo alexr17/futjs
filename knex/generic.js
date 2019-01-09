@@ -6,9 +6,11 @@ class GenericFutObj {
         this.type = type;
     }
 
-    static async get_obj(type, key, val) {
+    static async get_obj(type, key, val, init_obj=true) {
         const data = (await knex(type).where({[key]: val}))[0];
-        return new this(data, type);
+        if (init_obj)
+            return new this(data, type);
+        return data;
     }
 }
 
