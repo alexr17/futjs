@@ -98,7 +98,7 @@ const load_player = async (player_obj, player_errors, table_names) => {
         let table_ids = {}
         for (let table of table_names) {
             if (['nations', 'leagues', 'clubs'].includes(table)) {
-                let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table)
+                let row = extract_data_from_api(player_obj[table.slice(0,-1)], Object.keys(schema.tables[table]), table_ids, table);
                 table_ids[table.slice(0,-1)] = await (new GenericFutObj(row, table)).load_into_db();
             } else if (['player_stats', 'player_info', 'players'].includes(table)) {
                 let row = extract_data_from_api(player_obj, Object.keys(schema.tables[table]), table_ids, table);
@@ -115,6 +115,12 @@ const load_player = async (player_obj, player_errors, table_names) => {
     } catch (err) {
         console.log(err)
         player_errors.count += 1;
+    }
+}
+
+const card_type = async (player) => {
+    if (player.fut_id == player.base_fut_id) {
+        
     }
 }
 

@@ -17,7 +17,7 @@ class GenericFutObj {
 /**
  * Load self into db (async)
  */
-GenericFutObj.prototype.load_into_db = async () => {
+GenericFutObj.prototype.load_into_db = async function () {
     let id = await GenericFutObj.prototype.find_or_create_id.call(this);
     this.id = id;
     return id;
@@ -27,7 +27,7 @@ GenericFutObj.prototype.load_into_db = async () => {
  * Load object or get id from db (async)
  * @param {String} key 
  */
-GenericFutObj.prototype.find_or_create_id = async (key = 'fut_id') => {
+GenericFutObj.prototype.find_or_create_id = async function (key = 'fut_id') {
     const db_obj = await knex.from(this.type).where(key, this.data[key])
     let id = null;
     if (db_obj.length) {
