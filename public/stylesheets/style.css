@@ -1,8 +1,100 @@
+@font-face {
+  font-family: 'din-condensed'; /*a name to be used later*/
+  src: url('../fonts/din-condensed.woff'); /*URL to font*/
+  font-family: 'dinpro-condensed'; /*a name to be used later*/
+  src: url('../fonts/dinpro-condensed.woff'); /*URL to font*/
+}
+
 body {
   padding: 50px;
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
 
 a {
   color: #00B7FF;
+}
+
+.player-card {
+  border: none;
+  height: 205px;
+  width: 135px;
+  background-size: cover;
+  position: absolute;
+  display: grid;
+  grid-template-columns: 20px 22px auto 14px 7px;
+  grid-template-rows: 23px 37px 49px 26px 40px;
+  grid-template-areas: ". . . . ." ". stats face face . " ". aff face face . " "name name name name name" ". attributes attributes . . ";
+}
+
+.player-card .rat-and-pos {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  grid-area: stats;
+  text-align: center;
+}
+
+.player-card .face {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  grid-area: face;
+}
+
+.player-card .flag-and-club {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  grid-area: aff;
+}
+
+.player-card .name {
+  text-align: center;
+  grid-area: name;
+}
+
+.player-card .attr {
+  font-family: dinpro-condensed;
+}
+
+.player-rat {
+  font-size: 22px;
+    /* left: 16px; */
+    /* top: 32px; */
+    /* width: 30px; */
+  font-weight: 600;
+  margin-bottom: -4px;
+}
+
+.player-flag, .player-club, .player-face {
+  width: 100%;
+}
+
+.player-pos {
+  font-size: 12px;
+  font-weight: 400;
+}
+
+.player-name {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.player-stats {
+  -ms-flex-align: center;
+  align-items: center;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.horz-line {
+  height: 1px;
+  opacity: .6;
+  margin: 11%;
 }

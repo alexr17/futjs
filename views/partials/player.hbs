@@ -1,0 +1,26 @@
+<h1>Name: {{player.data.name}}</h1>
+<p>Position: {{player.data.position}}</p>
+<p>Fut Id: {{player.data.fut_id}}</p>
+<p>Base Id: {{player.data.base_fut_id}}</p>
+<br>
+<div class="player-card draggable" style="background-image: url({{player.imgs.shell_url}})">
+    <div class="rat-and-pos">
+    <span class="player-rat attr" style="color: {{player.font_color_style}}">{{player.data.rating}}</span>
+    <span class="player-pos attr" style="color: {{player.font_color_style}}">{{player.data.position}}</span>
+    </div>
+    <div class="flag-and-club">
+        <div class="horz-line" style="background-color: {{player.font_color_style}}"></div>
+        <img class="player-flag" src="{{player.imgs.nation_url}}">
+        <div class="horz-line" style="background-color: {{player.font_color_style}}"></div>
+        <img class="player-club" src="{{player.imgs.club_url}}">
+    </div>
+    <div class="face">
+        <img class="player-face" src="{{player.imgs.player_url}}">
+    </div>
+    <div class="name">
+    <span class="player-name attr" style="color: {{player.font_color_style}}">{{player.data.name}}</span>
+    </div>
+    <div class="stats">
+
+    </div>
+</div>
