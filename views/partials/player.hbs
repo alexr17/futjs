@@ -5,22 +5,39 @@
 <br>
 <div class="player-card draggable" style="background-image: url({{player.imgs.shell_url}})">
     <div class="rat-and-pos">
-    <span class="player-rat attr" style="color: {{player.font_color_style}}">{{player.data.rating}}</span>
-    <span class="player-pos attr" style="color: {{player.font_color_style}}">{{player.data.position}}</span>
+        <span class="player-rat attr" style="{{{color player.color "" 1}}}">{{player.data.rating}}</span>
+        <span class="player-pos attr" style="{{{color player.color "" 1}}}">{{player.data.position}}</span>
     </div>
     <div class="flag-and-club">
-        <div class="horz-line" style="background-color: {{player.font_color_style}}"></div>
+        <div class="horz-line" style="{{{color player.color " " ".5"}}}"></div>
         <img class="player-flag" src="{{player.imgs.nation_url}}">
-        <div class="horz-line" style="background-color: {{player.font_color_style}}"></div>
+        <div class="horz-line" style="{{{color player.color " " ".5"}}}"></div>
         <img class="player-club" src="{{player.imgs.club_url}}">
     </div>
     <div class="face">
         <img class="player-face" src="{{player.imgs.player_url}}">
     </div>
     <div class="name">
-    <span class="player-name attr" style="color: {{player.font_color_style}}">{{player.data.name}}</span>
+        <span class="player-name attr" style="{{{color player.color "" 1}}} {{{border player.color '.5' '1' 'bottom'}}}">{{player.data.name}}</span>
     </div>
-    <div class="stats">
-
+    <div class="stats" style="{{{color player.color "" 1}}}">
+        <div class="left stat pac" style="{{{border player.color '.5' '1' 'right'}}}">
+            <span class="stat-val">11</span><span class="stat-desc">PAC</span>
+        </div>
+        <div class="right stat dri">
+            <span class="stat-val">22</span><span class="stat-desc">DRI</span>
+        </div>
+        <div class="left stat sho" style="{{{border player.color '.5' '1' 'right'}}}">
+            <span class="stat-val">31</span><span class="stat-desc">SHO</span>
+        </div>
+        <div class="right stat def">
+            <span class="stat-val">48</span><span class="stat-desc">DEF</span>
+        </div>
+        <div class="left stat pas" style="{{{border player.color '.5' '1' 'right'}}}">
+            <span class="stat-val">99</span><span class="stat-desc">PAS</span>
+        </div>
+        <div class="right stat phy" >
+            <span class="stat-val">10</span><span class="stat-desc">PHY</span>
+        </div>
     </div>
 </div>

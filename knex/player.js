@@ -17,8 +17,8 @@ class Player extends GenericFutObj {
             const player_info = await Player.get_obj('player_info', 'id', this.data.player_info_id, false);
             const rarity_id = player_info.rarityid;
             const level_id = (league_id == 45 || player_info.rarityid >= 24 ? 0 : player_info.quality+1); //0 if icon, other use quality level
-            this.font_color_style = font_color(rarity_id);
-
+            this.color = color(rarity_id);
+            this.data.name = this.data.name.toUpperCase();
             this.imgs = {}
             this.imgs.base_player_url = `https://cdn.futbin.com/content/fifa19/img/players/${this.data.base_fut_id}.png`;
             let str = (this.data.fut_id == this.data.base_fut_id ? '' : 'p')
@@ -35,24 +35,24 @@ class Player extends GenericFutObj {
     }
 }
 
-const font_color = function(shell_id) {
+const color = function(shell_id) {
     //BASE
     if (shell_id == 1) {
-        return "rgb(70, 57, 12);";
+        return {r: 70, g: 57, b: 12};
     }
 
     //UEFA
     if ([68, 48, 70].includes(shell_id)) {
-        return "rgb(245, 245, 245);";
+        return {r: 245, g: 245, b: 245};
     }
 
     //OTW
     if (shell_id == 21) {
-        return "rgb(255, 71, 130);";
+        return {r: 255, g: 71, b: 130};
     }
 
     //SPECIAL
-    return "rgb(235, 205, 91);";
+    return {r: 235, g: 205, b: 91};
 }
 
 module.exports = Player;
