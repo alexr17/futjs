@@ -9,29 +9,28 @@ class Player extends GenericFutObj {
         super(data, "players");
     }
 
+    async generate_view_parameters() {
+        await set_img_urls;
+        this.color = color(this.data.rarity_id);
+        this.data.name = this.data.name.toUpperCase();
+    }
+
     async set_img_urls() {
-        if (this.data && this.data.fut_id && this.data.base_fut_id) {
-            const club_id = (await Player.get_obj('clubs', 'id', this.data.club_id, false)).fut_id;
-            const nation_id = (await Player.get_obj('nations', 'id', this.data.nation_id, false)).fut_id;
-            const league_id = (await Player.get_obj('leagues', 'id', this.data.league_id, false)).fut_id;
-            const player_info = await Player.get_obj('player_info', 'id', this.data.player_info_id, false);
-            const rarity_id = player_info.rarityid;
-            const level_id = (league_id == 45 || player_info.rarityid >= 24 ? 0 : player_info.quality+1); //0 if icon, other use quality level
-            this.color = color(rarity_id);
-            this.data.name = this.data.name.toUpperCase();
-            this.imgs = {}
-            this.imgs.base_player_url = `https://cdn.futbin.com/content/fifa19/img/players/${this.data.base_fut_id}.png`;
-            let str = (this.data.fut_id == this.data.base_fut_id ? '' : 'p')
-            this.imgs.player_url = `https://cdn.futbin.com/content/fifa19/img/players/${str}${this.data.fut_id}.png`;
-            this.imgs.club_url = `https://cdn.futbin.com/content/fifa19/img/clubs/${club_id}.png`;
-            this.imgs.nation_url = `https://cdn.futbin.com/content/fifa19/img/nation/${nation_id}.png`;
-            this.imgs.league_url = `https://cdn.futbin.com/content/fifa19/img/league/${league_id}.png`;
-            this.imgs.shell_url = `https://www.easports.com/fifa/ultimate-team/web-app/content/7D49A6B1-760B-4491-B10C-167FBC81D58A/2019/fut/items/images/backgrounds/itemCompanionBGs/large/cards_bg_e_1_${rarity_id}_${level_id}.png`;
-            return this.imgs;
-        }
-        else {
-            console.log("Invalid data for player")
-        }
+        const club_id = (await Player.get_obj('clubs', 'id', this.data.club_id, false)).fut_id;
+        const nation_id = (await Player.get_obj('nations', 'id', this.data.nation_id, false)).fut_id;
+        const league_id = (await Player.get_obj('leagues', 'id', this.data.league_id, false)).fut_id;
+        const player_info = await Player.get_obj('player_info', 'id', this.data.player_info_id, false);
+        const rarity_id = player_info.rarityid;
+        const level_id = (league_id == 45 || player_info.rarityid >= 24 ? 0 : player_info.quality+1); //0 if icon, other use quality level
+        this.imgs = {}
+        this.imgs.base_player_url = `https://cdn.futbin.com/content/fifa19/img/players/${this.data.base_fut_id}.png`;
+        let str = (this.data.fut_id == this.data.base_fut_id ? '' : 'p')
+        this.imgs.player_url = `https://cdn.futbin.com/content/fifa19/img/players/${str}${this.data.fut_id}.png`;
+        this.imgs.club_url = `https://cdn.futbin.com/content/fifa19/img/clubs/${club_id}.png`;
+        this.imgs.nation_url = `https://cdn.futbin.com/content/fifa19/img/nation/${nation_id}.png`;
+        this.imgs.league_url = `https://cdn.futbin.com/content/fifa19/img/league/${league_id}.png`;
+        this.imgs.shell_url = `https://www.easports.com/fifa/ultimate-team/web-app/content/7D49A6B1-760B-4491-B10C-167FBC81D58A/2019/fut/items/images/backgrounds/itemCompanionBGs/large/cards_bg_e_1_${rarity_id}_${level_id}.png`;
+        return this.imgs;
     }
 }
 

@@ -10,7 +10,7 @@ router.get('/', function(req, res, next) {
 
 
 router.get('/player', function(req, res, next) {
-  Player.get_obj('players', 'id', 250).then(p => {
+  Player.get_obj('players', 'id', 33).then(p => {
     p.set_img_urls().finally(_=> {
       res.render('partials/player', {layout: 'default', title: 'Player view', player: p});
     })
